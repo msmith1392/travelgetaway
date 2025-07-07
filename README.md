@@ -18,6 +18,7 @@ Deployed for fast static hosting on GitHub Pages.
 
 - [React](https://react.dev/) (via Vite)
 - [TypeScript](https://www.typescriptlang.org/) (strict)
+- [Material UI (MUI)](https://mui.com/) (component library)
 - [React Router DOM](https://reactrouter.com/) (routing)
 - [localStorage](https://developer.mozilla.org/docs/Web/API/Window/localStorage) (state persistence)
 - [Vite](https://vitejs.dev/) (fast dev/build tooling)
@@ -66,6 +67,13 @@ See `vite.config.ts` and `package.json` for deployment config.
 ## Architecture
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for details on project structure, advanced React patterns, and design decisions.
+
+---
+
+## Notes
+
+This project was bootstrapped with [Vite](https://vitejs.dev/).  
+See the generated files like `vite.config.ts`, `vite-env.d.ts`, and the `src/assets/` and `public/vite.svg` for Vite defaults.
 
 ---
 

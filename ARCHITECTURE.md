@@ -9,12 +9,16 @@ This document details the internal architecture, design decisions, and advanced 
 ```
 travelgetaway/
 ├── public/
-│   └── favicon.svg
+│   └── vite.svg
 ├── src/
+│   ├── assets/
+│   │   └── react.svg
 │   ├── components/
 │   │   ├── TripForm.tsx
 │   │   ├── TripPreview.tsx
 │   │   └── FileImportExport.tsx
+│   ├── context/
+│   │   └── TripContext.tsx
 │   ├── pages/
 │   │   ├── Home.tsx
 │   │   └── NotFound.tsx
@@ -23,15 +27,20 @@ travelgetaway/
 │   ├── utils/
 │   │   ├── storage.ts
 │   │   └── export.ts
-│   ├── context/
-│   │   └── TripContext.tsx
+│   ├── App.css
 │   ├── App.tsx
+│   ├── index.css
 │   ├── main.tsx
-│   └── styles.css
+│   └── vite-env.d.ts
+├── .gitignore
+├── eslint.config.js
 ├── index.html
-├── tsconfig.json
-├── vite.config.ts
 ├── package.json
+├── package-lock.json
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── vite.config.ts
 ├── README.md
 └── ARCHITECTURE.md
 ```
@@ -140,6 +149,12 @@ const TripPreview = React.memo(({ trip }: { trip: Trip }) => {
 
 - **export.ts**  
   Download trip as JSON or trigger email with trip data.
+
+---
+
+## Theming
+
+The app uses Material UI’s `ThemeProvider` and `createTheme` for consistent styling and easy customization.
 
 ---
 
