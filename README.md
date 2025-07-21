@@ -1,28 +1,26 @@
 # TravelGetaway
 
-A minimalist, type-safe React app for planning trips.  
-Export/import plans as JSON, email a copy, and enjoy zero backend dependencies.  
-Deployed for fast static hosting on GitHub Pages.
+A full-stack, containerized trip planning app built with React, Go, and Postgres.
 
 ---
 
 ## Features
 
-- Plan multi-day trips with activities per day
-- Export/import trip plans as JSON
-- Email trip plans (opens your mail client)
-- State persists in localStorage
-- Responsive, fast, and type-safe
+- Plan and manage multi-day trips with activities
+- User authentication and secure data storage
+- Responsive, modern UI (Material UI)
+- RESTful API backend in Go
+- Persistent storage with PostgreSQL
+- Easy local development with Docker Compose
+
+---
 
 ## Tech Stack
 
-- [React](https://react.dev/) (via Vite)
-- [TypeScript](https://www.typescriptlang.org/) (strict)
-- [Material UI (MUI)](https://mui.com/) (component library)
-- [React Router DOM](https://reactrouter.com/) (routing)
-- [localStorage](https://developer.mozilla.org/docs/Web/API/Window/localStorage) (state persistence)
-- [Vite](https://vitejs.dev/) (fast dev/build tooling)
-- [GitHub Pages](https://pages.github.com/) (static hosting)
+- **Frontend:** React, TypeScript, Vite, Material UI
+- **Backend:** Go (Golang), Gin
+- **Database:** PostgreSQL
+- **Containerization:** Docker, Docker Compose
 
 ---
 
@@ -30,51 +28,62 @@ Deployed for fast static hosting on GitHub Pages.
 
 ### Prerequisites
 
-- Node.js v18+ (recommended v20+)
-- npm
+- [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
+- (Optional for development) Node.js v18+ and Go 1.21+
 
-### Installation
+### Quick Start (Recommended)
 
 ```sh
-git clone https://github.com/YOUR_USERNAME/travelgetaway.git
+git clone https://github.com/msmith1392/travelgetaway.git
 cd travelgetaway
-npm install
+docker-compose up --build
 ```
 
-### Development
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend API: [http://localhost:8080](http://localhost:8080)
+- Postgres: exposed on port 5432
+
+### Development (without Docker)
+
+#### Frontend
 
 ```sh
+cd frontend
+npm install
 npm run dev
 ```
-Visit [http://localhost:5173](http://localhost:5173) in your browser.
 
-### Build
-
-```sh
-npm run build
-```
-
-### Deploy to GitHub Pages
+#### Backend
 
 ```sh
-npm run deploy
+cd backend
+go run main.go
 ```
 
-See `vite.config.ts` and `package.json` for deployment config.
+#### Database
+
+- Install Postgres locally or use Docker
+- Run migration scripts in `/db/migrations/`
 
 ---
 
-## Architecture
+## Project Structure
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for details on project structure, advanced React patterns, and design decisions.
-
----
-
-## Notes
-
-This project was bootstrapped with [Vite](https://vitejs.dev/).  
-See the generated files like `vite.config.ts`, `vite-env.d.ts`, and the `src/assets/` and `public/vite.svg` for Vite defaults.
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for details on folders, API, and design.
 
 ---
 
-_This project is a demonstration of modern React, TypeScript, and frontend architecture best practices._
+## Environment Variables
+
+- See `.env.example` files in `frontend/` and `backend/` for configuration.
+
+---
+
+## Deployment
+
+- The app is ready for deployment to any Docker-compatible platform.
+- For production, set appropriate environment variables and secrets.
+
+---
+
+_TravelGetaway is a modern, full-stack reference project for React, Go, and Postgres with Dockerized deployment._

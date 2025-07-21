@@ -1,6 +1,13 @@
 # TravelGetaway – Architecture & Implementation Guide
 
-This document details the internal architecture, design decisions, and advanced React patterns used in TravelGetaway.
+This document describes the architecture, design decisions, and technology stack for the TravelGetaway app.
+
+---
+
+## Overview
+
+TravelGetaway is a full-stack web application for planning and managing multi-day trips.  
+It features a React/TypeScript frontend, a Go backend API, a Postgres database, and is fully containerized with Docker.
 
 ---
 
@@ -8,46 +15,57 @@ This document details the internal architecture, design decisions, and advanced 
 
 ```
 travelgetaway/
-├── public/
-│   └── vite.svg
-├── src/
-│   ├── assets/
-│   │   └── react.svg
-│   ├── components/
-│   │   ├── TripForm.tsx
-│   │   ├── TripPreview.tsx
-│   │   └── FileImportExport.tsx
-│   ├── context/
-│   │   └── TripContext.tsx
-│   ├── pages/
-│   │   ├── Home.tsx
-│   │   └── NotFound.tsx
-│   ├── types/
-│   │   └── trip.ts
-│   ├── utils/
-│   │   ├── storage.ts
-│   │   └── export.ts
-│   ├── App.css
-│   ├── App.tsx
-│   ├── index.css
-│   ├── main.tsx
-│   └── vite-env.d.ts
+├── backend/
+│   ├── .env.example
+│   ├── db/
+│   ├── handlers/
+│   ├── models/
+│   ├── go.mod
+│   └── main.go
+├── db/
+│   ├── migrations/
+│   └── seed/
+├── frontend/
+│   ├── .env.example
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── public/
+│   ├── src/
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   └── vite.config.ts
 ├── .gitignore
-├── eslint.config.js
-├── index.html
-├── package.json
-├── package-lock.json
-├── tsconfig.json
-├── tsconfig.app.json
-├── tsconfig.node.json
-├── vite.config.ts
-├── README.md
-└── ARCHITECTURE.md
+├── ARCHITECTURE.md
+├── docker-compose.yml
+├── Dockerfile.backend
+├── Dockerfile.frontend
+└── README.md
 ```
 
 ---
 
-## Type Definitions
+## Technology Stack
+
+- **Frontend:** React, TypeScript, Vite, Material UI
+- **Backend:** Go (Golang), net/http or Gin/Fiber/Echo (choose one)
+- **Database:** PostgreSQL
+- **Containerization:** Docker, Docker Compose
+
+---
+
+## Environment Configuration
+
+- Both the `/backend` and `/frontend` directories include a `.env.example` file.
+- These files document the required environment variables for each service (such as database URLs, API keys, and secrets).
+- To configure your environment, copy `.env.example` to `.env` in each directory and fill in the appropriate values.
+- **Note:** Never commit real `.env` files with secrets to version control.
+
+---
+
+## Type Definitions (Frontend Example)
 
 ```ts
 // src/types/trip.ts
@@ -62,120 +80,117 @@ export interface Trip {
 }
 ```
 
+## Data Models (Backend Example)
+
+```go
+// backend/models/trip.go
+type ActivityDay struct {
+    Date       string   `json:"date"` // ISO string, e.g., "2025-07-01"
+    Activities []string `json:"activities"`
+}
+
+type Trip struct {
+    Title string        `json:"title"`
+    Days  []ActivityDay `json:"days"`
+}
+```
+
+## Database Schema Example
+
+```sql
+-- db/migrations/001_create_tables.sql
+CREATE TABLE trips (
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL
+);
+
+CREATE TABLE activity_days (
+    id SERIAL PRIMARY KEY,
+    trip_id INTEGER REFERENCES trips(id),
+    date DATE NOT NULL
+);
+
+CREATE TABLE activities (
+    id SERIAL PRIMARY KEY,
+    activity_day_id INTEGER REFERENCES activity_days(id),
+    description TEXT NOT NULL
+);
+```
+
+## Data Flow
+
+1. **Frontend** communicates with the **Go API** via RESTful HTTP endpoints (JSON).
+2. **Go API** handles business logic, authentication, and interacts with **Postgres** for data persistence.
+3. **Docker Compose** orchestrates all services for local development and deployment.
+
 ---
 
 ## Key Components
 
-- **TripForm.tsx**  
-  Controlled form for editing trip title and daily activities.
+### Frontend (`/frontend`)
 
-- **TripPreview.tsx**  
-  Read-only display of the trip plan. Uses `React.memo` and `useMemo` for performance.
+- **Pages:** Home, Trip Planner, Trip Details, Not Found
+- **Components:** TripForm, TripList, TripDetails, Login/Register, etc.
+- **API Layer:** Handles requests to Go backend (using fetch/axios).
+- **State Management:** React Context or Redux (if needed)
+- **Styling:** Material UI
 
-- **FileImportExport.tsx**  
-  Import/export trip data as JSON. Uses an uncontrolled file input (ref).
+### Backend (`/backend`)
 
-- **AutoSave.tsx**  
-  Example of `useEffect` with cleanup (timer for auto-save).
+- **API Endpoints:** CRUD for trips, users, authentication
+- **Models:** Trip, User, ActivityDay, etc.
+- **Database Layer:** SQL queries or ORM (e.g., GORM)
+- **Auth:** JWT or session-based authentication
 
-- **TripContext.tsx**  
-  Provides trip state globally via React Context.
+### Database (`/db`)
 
----
-
-## Advanced React Concepts Demonstrated
-
-- **Controlled vs Uncontrolled Components:**  
-  `TripForm` uses controlled inputs (managed by React state).  
-  `FileImportExport` demonstrates an uncontrolled file input using a ref.
-
-- **useState Batching & Functional Updates:**  
-  Functional updates to state in `Home.tsx` avoid stale closures, especially for nested data.  
-  Multiple state updates are batched in event handlers.
-
-- **Prop Drilling vs React Context:**  
-  Trip data and update handlers are passed via props (prop drilling) by default.  
-  A `TripContext` is provided as an alternative for global state sharing, consumed via `useContext`.
-
-- **useEffect + Cleanup:**  
-  `useEffect` is used for side effects (e.g., localStorage sync).  
-  Example: a timer component demonstrates cleanup on unmount.
-
-- **Performance Optimizations:**  
-  `TripPreview` is wrapped in `React.memo` to prevent unnecessary re-renders.  
-  `useMemo` and `useCallback` are used to memoize expensive calculations and callbacks.
+- **Schema:** Users, Trips, Activities tables
+- **Migrations:** SQL scripts for schema changes
+- **Seed Data:** Optional demo data
 
 ---
 
-## Example: useEffect Cleanup
+## Example API Endpoints
 
-```ts
-// src/components/AutoSave.tsx
-import { useEffect } from "react";
+- `POST /api/register` – Register a new user
+- `POST /api/login` – Authenticate user
 
-export function AutoSave({ onSave }: { onSave: () => void }) {
-  useEffect(() => {
-    const interval = setInterval(onSave, 10000); // auto-save every 10s
-    return () => clearInterval(interval); // cleanup on unmount
-  }, [onSave]);
-  return null;
-}
-```
+- `GET /api/trips` – List user’s trips
+- `POST /api/trips` – Create a new trip
+
+- `GET /api/trips/:id` – Get trip details
+- `PUT /api/trips/:id` – Update trip
+- `DELETE /api/trips/:id` – Delete trip
 
 ---
 
-## Example: Performance Optimization
+## Docker & Deployment
 
-```ts
-// src/components/TripPreview.tsx
-import React, { useMemo } from "react";
-import type { Trip } from "../types/trip";
-
-const TripPreview = React.memo(({ trip }: { trip: Trip }) => {
-  const summary = useMemo(() => {
-    // expensive calculation here
-    return trip.days.length;
-  }, [trip.days]);
-  return <div>Trip has {summary} days.</div>;
-});
-```
-
----
-
-## Utilities
-
-- **storage.ts**  
-  Save/load trip data to/from localStorage.
-
-- **export.ts**  
-  Download trip as JSON or trigger email with trip data.
-
----
-
-## Theming
-
-The app uses Material UI’s `ThemeProvider` and `createTheme` for consistent styling and easy customization.
+- **docker-compose.yml** spins up frontend, backend, and Postgres containers.
+- **Dockerfile.backend** builds the Go API server.
+- **Dockerfile.frontend** builds the React app.
+- **Volumes** for persistent Postgres data.
 
 ---
 
 ## Design Goals
 
-- Type-safe from top to bottom
-- Explicit component props/interfaces
-- Pure functions in `utils/`
-- Easy to extend (drag-and-drop, PWA, etc.)
-- No backend dependencies
+- Modern, type-safe, and maintainable codebase
+- Clear separation of frontend and backend
+- Secure authentication and data access
+- Easy local development with Docker Compose
+- Ready for cloud deployment (e.g., Render, Fly.io, AWS, etc.)
 
 ---
 
 ## Extensibility & Future Ideas
 
-- Drag-and-drop support
-- PDF export (e.g., html2pdf)
-- PWA/offline support
-- Firebase sync (optional)
-- Collaboration mode (shared links)
+- OAuth login (Google, GitHub)
+- Trip sharing/collaboration
+- Mobile-friendly PWA
+- Notifications/reminders
+- Advanced search/filtering
 
 ---
 
-_This document describes the internal architecture and React patterns used in TravelGetaway. For setup and usage, see [README.md](./README.md)._
+_See [README.md](./README.md) for setup and usage instructions._
