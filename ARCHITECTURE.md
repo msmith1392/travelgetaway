@@ -50,7 +50,7 @@ travelgetaway/
 ## Technology Stack
 
 - **Frontend:** React, TypeScript, Vite, Material UI
-- **Backend:** Go (Golang), net/http or Gin/Fiber/Echo (choose one)
+- **Backend:** Go (Golang), Gin
 - **Database:** PostgreSQL
 - **Containerization:** Docker, Docker Compose
 
@@ -131,8 +131,8 @@ CREATE TABLE activities (
 
 - **Pages:** Home, Trip Planner, Trip Details, Not Found
 - **Components:** TripForm, TripList, TripDetails, Login/Register, etc.
-- **API Layer:** Handles requests to Go backend (using fetch/axios).
-- **State Management:** React Context or Redux (if needed)
+- **API Layer:** Handles requests to Go backend using **React Query**
+- **State Management:** **Redux Toolkit**
 - **Styling:** Material UI
 
 ### Backend (`/backend`)
@@ -140,7 +140,7 @@ CREATE TABLE activities (
 - **API Endpoints:** CRUD for trips, users, authentication
 - **Models:** Trip, User, ActivityDay, etc.
 - **Database Layer:** SQL queries or ORM (e.g., GORM)
-- **Auth:** JWT or session-based authentication
+- **Auth:** **JWT** authentication
 
 ### Database (`/db`)
 
