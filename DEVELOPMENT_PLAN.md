@@ -40,11 +40,11 @@ It demonstrates the project’s structure, workflow, and time management.
 
 ## Database Tasks (Est. 7h)
 
-- [ ] **Design schema** for `users`, `trips`, `activity_days`, `activities` — _2h_
+- [x] **Design schema** for `users`, `trips`, `activity_days`, `activities`, `trip_users` — _2h_
 - [ ] **Write migration scripts** in `/db/migrations/` — _2h_
 - [ ] **Add seed data scripts** in `/db/seed/` — _1h_
 - [ ] **Test migrations** against local/dev **Postgres** — _1h_
-- [ ] **Document schema** in `ARCHITECTURE.md` — _1h_
+- [x] **Document schema** in [DATABASE_SCHEMA_AND_USAGE_SCENARIO.md] — _1h_
 
 ---
 

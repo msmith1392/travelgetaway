@@ -144,9 +144,10 @@ CREATE TABLE activities (
 
 ### Database (`/db`)
 
-- **Schema:** Users, Trips, Activities tables
+- **Schema:** Users, Trips, ActivityDays, Activities, TripUsers tables
 - **Migrations:** SQL scripts for schema changes
 - **Seed Data:** Optional demo data
+- **Detailed Schema:** See [DATABASE_SCHEMA_AND_USAGE_SCENARIO.md](./DATABASE_SCHEMA_AND_USAGE_SCENARIO.md) for full database schema and usage scenarios.
 
 ---
 

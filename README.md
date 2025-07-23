@@ -75,7 +75,8 @@ go run main.go
 
 ## Project Structure
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for details on folders, API, and design.
+- See [ARCHITECTURE.md](./ARCHITECTURE.md) for high-level design and API structure.
+- See [DATABASE_SCHEMA_AND_USAGE_SCENARIO.md](./DATABASE_SCHEMA_AND_USAGE_SCENARIO.md) for the full database schema, relationships, and collaboration workflow.
 
 ---
 
