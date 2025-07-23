@@ -29,7 +29,7 @@ A full-stack, containerized trip planning app built with React, Go, and Postgres
 ### Prerequisites
 
 - [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
-- (Optional for development) Node.js v18+ and Go 1.21+
+- (Optional for development) Node.js v20+ and Go 1.24+
 
 ### Quick Start (Recommended)
 
@@ -39,11 +39,17 @@ cd travelgetaway
 docker-compose up --build
 ```
 
+Running `docker-compose up --build` will start the frontend, backend, and database containers:
+
 - Frontend: [http://localhost:3000](http://localhost:3000)
 - Backend API: [http://localhost:8080](http://localhost:8080)
 - Postgres: exposed on port 5432
 
+---
+
 ### Development (without Docker)
+
+You can also run each service directly for local development:
 
 #### Frontend
 
@@ -83,6 +89,78 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for details on folders, API, and design
 
 - The app is ready for deployment to any Docker-compatible platform.
 - For production, set appropriate environment variables and secrets.
+
+---
+
+## Docker & Local Development
+
+**Docker Compose** orchestrates all services for a seamless local dev experience.
+
+- **Start all services:**
+
+  ```sh
+  docker-compose up --build
+  ```
+
+- **Restart all services:**
+
+  ```sh
+  docker-compose restart
+  ```
+
+- **Restart any service without affecting the others:**
+
+  ```sh
+  docker-compose restart frontend
+  docker-compose restart backend
+  docker-compose restart db
+  ```
+
+- **Stop all services:**
+
+  ```sh
+  docker-compose down
+  ```
+
+  (Data in the Postgres volume persists.)
+
+**Notes:**
+
+- Environment variables are managed via `.env.example` files in each service.
+- You can run frontend and backend outside Docker if preferred (see above).
+- Logs for each service appear in your terminal when running `docker-compose up`.
+
+---
+
+## Troubleshooting: Go Backend Docker Builds
+
+If you encounter errors during Docker builds for the backend such as:
+
+- `COPY go.mod go.sum ./` fails: One or both files are missing.
+- `RUN go build -o server main.go` fails: `main.go` is missing or not in the expected location.
+
+**Solution:**
+
+1. Make sure the following files exist in the `/backend` directory:
+
+   - `main.go` — The entry point for your Go application.
+   - `go.mod` and `go.sum` — Go module files for dependency management.
+     (Learn more about Go modules [here](https://blog.golang.org/using-go-modules).)
+
+2. If any are missing, run:
+
+   ```sh
+   cd backend
+   go mod init github.com/msmith1392/travelgetaway
+   go mod tidy
+   ```
+
+   This will generate `go.mod` and `go.sum`.  
+   If you don’t have a `main.go`, create a minimal one as your entry point.
+
+3. Ensure your `main.go` is in the `/backend` directory (not a subfolder) and named exactly `main.go`.
+
+These files are required for Docker to build your Go backend image successfully.
 
 ---
 

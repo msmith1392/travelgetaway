@@ -50,13 +50,13 @@ It demonstrates the project’s structure, workflow, and time management.
 
 ## Docker & DevOps Tasks (Est. 8h)
 
-- [ ] **Write `Dockerfile.frontend`** for React build and static serving — _1h_
-- [ ] **Write `Dockerfile.backend`** for Go API build and run — _1h_
-- [ ] **Write `docker-compose.yml`** to orchestrate frontend, backend, and **Postgres** — _2h_
-- [ ] **Configure volumes** for **Postgres** data persistence — _1h_
-- [ ] **Set up environment variable passing** in **Docker Compose** — _1h_
-- [ ] **Test full stack** with `docker-compose up` — _1h_
-- [ ] **Document Docker usage** in `README.md` — _1h_
+- [x] **Write `Dockerfile.frontend`** for React build and static serving — _1h_
+- [x] **Write `Dockerfile.backend`** for Go API build and run — _1h_
+- [x] **Write `docker-compose.yml`** to orchestrate frontend, backend, and **Postgres** — _2h_
+- [x] **Configure volumes** for **Postgres** data persistence — _1h_
+- [x] **Set up environment variable passing** in **Docker Compose** — _1h_
+- [x] **Test full stack** with `docker-compose up` — _1h_
+- [x] **Document Docker usage** in `README.md` — _1h_
 
 ---
 
@@ -64,4 +64,19 @@ It demonstrates the project’s structure, workflow, and time management.
 
 ---
 
-_Last updated: July 21, 2025_
+## Troubleshooting
+
+### Go Backend Docker Builds
+
+When building the backend Docker image, ensure the following files exist in `/backend`:
+
+- `main.go` — The entry point for your Go application.
+- `go.mod` and `go.sum` — Go module files for dependency management.
+
+If missing, run:
+
+```sh
+cd backend
+go mod init github.com/msmith1392/travelgetaway
+go mod tidy
+```
