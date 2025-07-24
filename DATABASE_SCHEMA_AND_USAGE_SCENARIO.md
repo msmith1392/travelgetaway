@@ -61,6 +61,12 @@
 
 ---
 
+> **Note:** Indexes are created on foreign key columns for performance.  
+> The `trip_users` table has a unique constraint on `(trip_id, user_id)` to prevent duplicate memberships.  
+> See migration scripts for details.
+
+---
+
 ## Relationships
 
 - A **user** can have many **trips**.
@@ -68,6 +74,14 @@
 - An **activity_day** can have many **activities**.
 - A **trip** can be shared with many **users** (via `trip_users`).
 - A **user** can have access to many **trips** (via `trip_users`).
+
+---
+
+## Seed Data
+
+- Demo data for users, trips, days, and activities is provided in `/db/seed/001_seed_initial_data.sql` for development and testing.
+- Demo users include Alice, Bob, Carol, Dave, and Eve with easy-to-remember passwords.
+- See seed scripts for details.
 
 ---
 

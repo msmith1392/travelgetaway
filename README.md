@@ -70,6 +70,7 @@ go run main.go
 
 - Install Postgres locally or use Docker
 - Run migration scripts in `/db/migrations/`
+- Run seed data scripts in `/db/seed/`
 
 ---
 
