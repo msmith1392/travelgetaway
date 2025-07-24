@@ -120,10 +120,11 @@
    - The current MVP uses a fully collaborative model where all users have equal permissions on a trip.
    - In the future, the schema and application logic may be extended to support user roles such as **owner**, **editor**, and **viewer**.
    - Ownership could enable features like:
-   - Restricting who can edit or delete trips, days, or activities
-   - Approval workflows for proposed changes
-   - Transferring ownership if the current owner leaves
-   - Assigning different permissions to collaborators
+     - Restricting who can edit or delete trips, days, or activities
+     - Approval workflows for proposed changes
+     - Transferring ownership if the current owner leaves
+     - Assigning different permissions to collaborators
+   - To prevent silent overwrites when multiple users edit a trip at the same time, optimistic concurrency control could be implemented. This involves adding an `updated_at` timestamp or a version number to the trip record, and rejecting saves if the record has changed since the user loaded it.
    - Any changes to support roles or ownership will require updates to both the database schema (e.g., adding a `role` column to `trip_users`) and the application logic.
 
 ---
