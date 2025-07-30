@@ -3,6 +3,9 @@
 /frontend/dist
 /frontend/dist-ssr
 
+# environment variables
+.env
+
 # Logs
 logs
 *.log
