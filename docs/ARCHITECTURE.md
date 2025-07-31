@@ -7,7 +7,7 @@ This document describes the architecture, design decisions, and technology stack
 ## Overview
 
 TravelGetaway is a full-stack web application for planning and managing multi-day trips.  
-It features a React/TypeScript frontend, a Go backend API, a Postgres database, and is fully containerized with Docker.
+It features a React/TypeScript frontend, a Go backend API, a Postgres database, and is fully containerized with Podman.
 
 ---
 
@@ -25,6 +25,14 @@ travelgetaway/
 ├── db/
 │   ├── migrations/
 │   └── seed/
+├── docker/
+│   ├── Dockerfile.backend
+│   ├── Dockerfile.frontend
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── DEVELOPMENT_PLAN.md
+│   ├── DATABASE_SCHEMA_AND_USAGE_SCENARIO.md
+│   └── PODMAN_SETUP_AND_USAGE_GUIDE.md
 ├── frontend/
 │   ├── .env.example
 │   ├── eslint.config.js
@@ -37,11 +45,13 @@ travelgetaway/
 │   ├── tsconfig.json
 │   ├── tsconfig.node.json
 │   └── vite.config.ts
+├── scripts/
+│   ├── start-db.sh
+│   ├── start-backend.sh
+│   ├── start-frontend.sh
+│   ├── start-db-and-backend.sh
+│   └── stop-all.sh
 ├── .gitignore
-├── ARCHITECTURE.md
-├── docker-compose.yml
-├── Dockerfile.backend
-├── Dockerfile.frontend
 └── README.md
 ```
 
@@ -52,7 +62,7 @@ travelgetaway/
 - **Frontend:** React, TypeScript, Vite, Material UI
 - **Backend:** Go (Golang), Gin
 - **Database:** PostgreSQL
-- **Containerization:** Docker, Docker Compose
+- **Containerization:** Podman (with shell scripts for orchestration)
 
 ---
 
@@ -157,7 +167,7 @@ See `/db/seed/001_seed_initial_data.sql` for initial seed data.
 
 1. **Frontend** communicates with the **Go API** via RESTful HTTP endpoints (JSON).
 2. **Go API** handles business logic, authentication, and interacts with **Postgres** for data persistence.
-3. **Docker Compose** orchestrates all services for local development and deployment.
+3. **Podman shell scripts** orchestrate all services for local development and deployment.
 
 ---
 
@@ -201,11 +211,11 @@ See `/db/seed/001_seed_initial_data.sql` for initial seed data.
 
 ---
 
-## Docker & Deployment
+## Podman & Deployment
 
-- **docker-compose.yml** spins up frontend, backend, and Postgres containers.
-- **Dockerfile.backend** builds the Go API server.
-- **Dockerfile.frontend** builds the React app.
+- **Podman shell scripts** (`scripts/start-db.sh`, `scripts/start-backend.sh`, `scripts/start-frontend.sh`, `scripts/stop-all.sh`) start and stop frontend, backend, and Postgres containers.
+- **Dockerfile.backend** builds the Go API server image.
+- **Dockerfile.frontend** builds the React app image.
 - **Volumes** for persistent Postgres data.
 
 ---
@@ -215,8 +225,8 @@ See `/db/seed/001_seed_initial_data.sql` for initial seed data.
 - Modern, type-safe, and maintainable codebase
 - Clear separation of frontend and backend
 - Secure authentication and data access
-- Easy local development with Docker Compose
-- Ready for cloud deployment (e.g., Render, Fly.io, AWS, etc.)
+- Easy local development with Podman shell scripts
+- Ready for cloud deployment (Podman-compatible platforms)
 
 ---
 
@@ -232,4 +242,4 @@ See `/db/seed/001_seed_initial_data.sql` for initial seed data.
 
 ---
 
-_See [README.md](./README.md) for setup and usage instructions._
+_See [README.md](../README.md) for setup and usage instructions._

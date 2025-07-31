@@ -1,0 +1,40 @@
+# DEPRECATED: This docker-compose.yml is kept for reference only.
+# The project now uses Podman and shell scripts for container orchestration.
+# See docs/PODMAN_SETUP_AND_USAGE_GUIDE.md for the current workflow.
+
+# version: '3.8'
+
+# services:
+#   frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: ../Dockerfile.frontend
+#     ports:
+#       - "3000:80"
+#     depends_on:
+#       - backend
+
+#   backend:
+#     build:
+#       context: ./backend
+#       dockerfile: ../Dockerfile.backend
+#     ports:
+#       - "8080:8080"
+#     environment:
+#       - DATABASE_URL=postgres://postgres:postgres@db:5432/travelgetaway?sslmode=disable
+#     depends_on:
+#       - db
+
+#   db:
+#     image: postgres:16-alpine
+#     environment:
+#       POSTGRES_DB: ${POSTGRES_DB}
+#       POSTGRES_USER: ${POSTGRES_USER}
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+
+# volumes:
+#   pgdata:

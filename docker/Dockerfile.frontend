@@ -8,6 +8,7 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
+RUN chmod +x node_modules/.bin/tsc node_modules/.bin/vite
 RUN npm run build
 
 # Stage 2: Serve the build with a lightweight web server

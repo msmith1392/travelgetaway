@@ -11,7 +11,7 @@ A full-stack, containerized trip planning app built with React, Go, and Postgres
 - Responsive, modern UI (Material UI)
 - RESTful API backend in Go
 - Persistent storage with PostgreSQL
-- Easy local development with Docker Compose
+- Easy local development with Podman
 
 ---
 
@@ -20,7 +20,7 @@ A full-stack, containerized trip planning app built with React, Go, and Postgres
 - **Frontend:** React, TypeScript, Vite, Material UI
 - **Backend:** Go (Golang), Gin
 - **Database:** PostgreSQL
-- **Containerization:** Docker, Docker Compose
+- **Containerization:** Podman
 
 ---
 
@@ -28,18 +28,23 @@ A full-stack, containerized trip planning app built with React, Go, and Postgres
 
 ### Prerequisites
 
-- [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
+- [Podman](https://podman.io/getting-started/installation)
 - (Optional for development) Node.js v20+ and Go 1.24+
 
-### Quick Start (Recommended)
+### Quick Start
 
 ```sh
 git clone https://github.com/msmith1392/travelgetaway.git
 cd travelgetaway
-docker-compose up --build
+podman machine init      # Only needed once (Windows/WSL2)
+podman machine start     # Start Podman VM for each session
+podman system connection list  # Verify connection is active
+podman build -t travelgetaway-frontend -f docker/Dockerfile.frontend ./frontend
+podman build -t travelgetaway-backend -f docker/Dockerfile.backend ./backend
+podman volume create travelgetaway_pgdata
+./scripts/start-db-and-backend.sh
+./scripts/start-frontend.sh
 ```
-
-Running `docker-compose up --build` will start the frontend, backend, and database containers:
 
 - Frontend: [http://localhost:3000](http://localhost:3000)
 - Backend API: [http://localhost:8080](http://localhost:8080)
@@ -47,7 +52,7 @@ Running `docker-compose up --build` will start the frontend, backend, and databa
 
 ---
 
-### Development (without Docker)
+### Development (without Podman)
 
 You can also run each service directly for local development:
 
@@ -68,7 +73,7 @@ go run main.go
 
 #### Database
 
-- Install Postgres locally or use Docker
+- Install Postgres locally or use Podman
 - Run migration scripts in `/db/migrations/`
 - Run seed data scripts in `/db/seed/`
 
@@ -76,52 +81,40 @@ go run main.go
 
 ## Project Structure
 
-- See [ARCHITECTURE.md](./ARCHITECTURE.md) for high-level design and API structure.
-- See [DATABASE_SCHEMA_AND_USAGE_SCENARIO.md](./DATABASE_SCHEMA_AND_USAGE_SCENARIO.md) for the full database schema, relationships, and collaboration workflow.
+- See [ARCHITECTURE.md](./docs/ARCHITECTURE.md) for high-level design and API structure.
+- See [DATABASE_SCHEMA_AND_USAGE_SCENARIO.md](./docs/DATABASE_SCHEMA_AND_USAGE_SCENARIO.md) for the full database schema, relationships, and collaboration workflow.
 
 ---
 
 ## Environment Variables
 
 - See `.env.example` files in `frontend/` and `backend/` for configuration.
+- **Do not commit `.env` files with secrets.**
 
 ---
 
 ## Deployment
 
-- The app is ready for deployment to any Docker-compatible platform.
+- The app is ready for deployment to any Podman-compatible platform.
 - For production, set appropriate environment variables and secrets.
 
 ---
 
-## Docker & Local Development
+## Podman & Local Development
 
-**Docker Compose** orchestrates all services for a seamless local dev experience.
+**Podman CLI and shell scripts orchestrate all services for a seamless local dev experience.**
 
 - **Start all services:**
 
   ```sh
-  docker-compose up --build
-  ```
-
-- **Restart all services:**
-
-  ```sh
-  docker-compose restart
-  ```
-
-- **Restart any service without affecting the others:**
-
-  ```sh
-  docker-compose restart frontend
-  docker-compose restart backend
-  docker-compose restart db
+  ./scripts/start-db-and-backend.sh
+  ./scripts/start-frontend.sh
   ```
 
 - **Stop all services:**
 
   ```sh
-  docker-compose down
+  ./scripts/stop-all.sh
   ```
 
   (Data in the Postgres volume persists.)
@@ -129,14 +122,15 @@ go run main.go
 **Notes:**
 
 - Environment variables are managed via `.env.example` files in each service.
-- You can run frontend and backend outside Docker if preferred (see above).
-- Logs for each service appear in your terminal when running `docker-compose up`.
+- You can run frontend and backend outside Podman if preferred (see above).
+- You can use `start-db.sh` and `start-backend.sh` separately if needed.
+- Logs for each service appear in your terminal when running the shell scripts.
 
 ---
 
-## Troubleshooting: Go Backend Docker Builds
+## Troubleshooting: Go Backend Podman Builds
 
-If you encounter errors during Docker builds for the backend such as:
+If you encounter errors during Podman builds for the backend such as:
 
 - `COPY go.mod go.sum ./` fails: One or both files are missing.
 - `RUN go build -o server main.go` fails: `main.go` is missing or not in the expected location.
@@ -162,8 +156,8 @@ If you encounter errors during Docker builds for the backend such as:
 
 3. Ensure your `main.go` is in the `/backend` directory (not a subfolder) and named exactly `main.go`.
 
-These files are required for Docker to build your Go backend image successfully.
+These files are required for Podman to build your Go backend image successfully.
 
 ---
 
-_TravelGetaway is a modern, full-stack reference project for React, Go, and Postgres with Dockerized deployment._
+_TravelGetaway is a modern, full-stack reference project for React, Go, and Postgres with Podman-based deployment._
