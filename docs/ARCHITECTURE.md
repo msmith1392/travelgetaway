@@ -108,7 +108,7 @@ type Trip struct {
 ## Database Schema Example
 
 ```sql
--- db/migrations/001_create_tables.sql
+-- db/migrations/001_create_tables.up.sql
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,

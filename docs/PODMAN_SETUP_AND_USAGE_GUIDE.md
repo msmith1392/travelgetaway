@@ -46,7 +46,7 @@ podman network create <name>               # Create network
 
    ```sh
    podman build -t travelgetaway-frontend -f docker/Dockerfile.frontend ./frontend
-   podman build -t travelgetaway-backend -f docker/Dockerfile.backend ./backend
+   podman build -t travelgetaway-backend -f docker/Dockerfile.backend .
    ```
 
 3. **Create Volumes**
@@ -70,9 +70,17 @@ podman network create <name>               # Create network
    ```
 
    - This script will:
+
      - Start the Postgres container if it’s not running
      - Wait for the database to be ready
-     - Start the backend container (which runs migrations on startup)
+     - Start the backend container (which runs migrations on startup automatically)
+
+   - **Migrations:**
+     - Migration files must use the `.up.sql` and `.down.sql` naming convention and be located in `db/migrations/`.
+     - Migrations are applied automatically by the backend service at startup using golang-migrate.
+     - If migration files are not named correctly, migrations will fail with errors like `file does not exist`.
+     - See [golang-migrate documentation](https://github.com/golang-migrate/migrate) and [Migration file naming conventions](https://github.com/golang-migrate/migrate/blob/master/MIGRATIONS.md) for details.
+     - For Go API usage, see [pkg.go.dev](https://pkg.go.dev/github.com/golang-migrate/migrate/v4).
 
 6. **Start Frontend Container**
 
@@ -143,6 +151,19 @@ podman rm $(podman ps -a -q)
 
 ## Notes
 
-- Environment variables are loaded from `.env` files in the project root.
-- The backend container will automatically run migrations on startup if implemented in your Go code.
+- Environment variables are loaded from the root `.env` file.
+- The backend container will automatically run database migrations on startup using golang-migrate. No manual migration commands are needed.
+- Migration files must use the `.up.sql` and `.down.sql` naming convention and are located in `db/migrations/`.
+- To seed demo data, use `psql` or [pgAdmin 4](https://www.pgadmin.org/) to run the seed SQL script (`db/seed/001_seed_initial_data.sql`).
 - For most workflows, use `start-db-and-backend.sh` and `start-frontend.sh` for convenience.
+- You can use pgAdmin 4 for interactive database management and seeding.
+- See [README.md](../README.md) for full setup and usage instructions.
+
+---
+
+## References
+
+- [golang-migrate documentation](https://github.com/golang-migrate/migrate)
+- [Migration file naming conventions](https://github.com/golang-migrate/migrate/blob/master/MIGRATIONS.md)
+- [Go API usage](https://pkg.go.dev/github.com/golang-migrate/migrate/v4)
+- [pgAdmin 4](https://www.pgadmin.org/)

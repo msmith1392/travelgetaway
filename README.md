@@ -12,13 +12,14 @@ A full-stack, containerized trip planning app built with React, Go, and Postgres
 - RESTful API backend in Go
 - Persistent storage with PostgreSQL
 - Easy local development with Podman
+- **Automated database migrations** with golang-migrate
 
 ---
 
 ## Tech Stack
 
 - **Frontend:** React, TypeScript, Vite, Material UI
-- **Backend:** Go (Golang), Gin
+- **Backend:** Go (Golang), Gin, golang-migrate
 - **Database:** PostgreSQL
 - **Containerization:** Podman
 
@@ -40,7 +41,7 @@ podman machine init      # Only needed once (Windows/WSL2)
 podman machine start     # Start Podman VM for each session
 podman system connection list  # Verify connection is active
 podman build -t travelgetaway-frontend -f docker/Dockerfile.frontend ./frontend
-podman build -t travelgetaway-backend -f docker/Dockerfile.backend ./backend
+podman build -t travelgetaway-backend -f docker/Dockerfile.backend .
 podman volume create travelgetaway_pgdata
 ./scripts/start-db-and-backend.sh
 ./scripts/start-frontend.sh
@@ -68,14 +69,19 @@ npm run dev
 
 ```sh
 cd backend
+go mod tidy
 go run main.go
 ```
 
 #### Database
 
 - Install Postgres locally or use Podman
-- Run migration scripts in `/db/migrations/`
-- Run seed data scripts in `/db/seed/`
+- **Migrations are automated**—no need to run migration scripts by hand.
+- To seed demo data, run:
+  ```sh
+  psql -U $POSTGRES_USER -d $POSTGRES_DB -h localhost -p 5432 -f db/seed/001_seed_initial_data.sql
+  ```
+- **Alternatively, you can use [pgAdmin 4](https://www.pgadmin.org/) to connect to your database and run seed or custom SQL scripts interactively.**
 
 ---
 
@@ -86,9 +92,9 @@ go run main.go
 
 ---
 
-## Environment Variables
+# Environment Variables
 
-- See `.env.example` files in `frontend/` and `backend/` for configuration.
+- See `.env.example` file for a configuration example.
 - **Do not commit `.env` files with secrets.**
 
 ---
@@ -128,7 +134,18 @@ go run main.go
 
 ---
 
-## Troubleshooting: Go Backend Podman Builds
+## Database Migrations
+
+- **Migrations are applied automatically** by the backend service at startup using golang-migrate.
+- Migration files must use the `.up.sql` and `.down.sql` naming convention.
+- The backend container reads migration files from `/app/db/migrations` and applies them on startup.
+- No need to run migration scripts manually.
+
+---
+
+## Troubleshooting
+
+### Go Backend Podman Builds
 
 If you encounter errors during Podman builds for the backend such as:
 
@@ -157,6 +174,24 @@ If you encounter errors during Podman builds for the backend such as:
 3. Ensure your `main.go` is in the `/backend` directory (not a subfolder) and named exactly `main.go`.
 
 These files are required for Podman to build your Go backend image successfully.
+
+---
+
+## Automated Migrations & Seed Data
+
+- **Migrations:**  
+  When the backend container starts, it automatically applies all migrations found in `/app/db/migrations` using golang-migrate.
+- **Seed Data:**  
+  To populate demo data, run the seed SQL file manually using `psql` or `pgAdmin 4` (see above).
+
+---
+
+## References
+
+- [golang-migrate documentation](https://github.com/golang-migrate/migrate)
+- [Migration file naming conventions](https://github.com/golang-migrate/migrate/blob/master/MIGRATIONS.md)
+- [Go API usage](https://pkg.go.dev/github.com/golang-migrate/migrate/v4)
+- [pgAdmin 4](https://www.pgadmin.org/)
 
 ---
 

@@ -1,6 +1,8 @@
 #!/bin/sh
 set -a
-. ../.env
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$SCRIPT_DIR/.."
+. "$PROJECT_ROOT/.env"
 set +a
 
 podman run -d \

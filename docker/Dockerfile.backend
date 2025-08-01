@@ -4,11 +4,11 @@ FROM golang:1.24-alpine AS builder
 WORKDIR /app
 
 # Copy go mod files and download dependencies
-COPY go.mod go.sum ./
+COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
 # Copy the rest of the source code
-COPY . .
+COPY backend/. ./
 
 # Build the Go binary
 RUN go build -o server main.go
@@ -21,8 +21,11 @@ WORKDIR /app
 # Copy the binary from builder
 COPY --from=builder /app/server .
 
+# Copy migration files into the image
+COPY db/migrations /app/db/migrations
+
 # Copy any needed static/config files (optional)
-# COPY .env.example ./
+# COPY backend/.env.example ./
 
 EXPOSE 8080
 
