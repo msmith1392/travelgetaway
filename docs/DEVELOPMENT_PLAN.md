@@ -10,7 +10,7 @@ It demonstrates the project’s structure, workflow, and time management.
 
 ## Frontend Tasks (Est. 30h)
 
-- [ ] Scaffold React app in `/frontend` (Vite + TypeScript) — _1h_
+- [x] Scaffold React app in `/frontend` (Vite + TypeScript) — _1h_
 - [ ] Set up Material UI and global theme — _2h_
 - [ ] Implement routing (Home, Trip Planner, Trip Details, Not Found) — _2h_
 - [ ] Build `TripForm` component (add/edit trip days/activities) — _4h_
@@ -28,7 +28,7 @@ It demonstrates the project’s structure, workflow, and time management.
 
 ## Backend Tasks (Est. 25h)
 
-- [ ] Scaffold Go project in `/backend` (Gin) — _2h_
+- [x] Scaffold Go project in `/backend` (Gin) — _2h_
 - [ ] Set up routing and middleware (CORS, logging, etc.) — _2h_
 - [ ] Implement authentication (JWT/session) — _4h_
 - [ ] Create models for `Trip`, `User`, `ActivityDay` — _2h_

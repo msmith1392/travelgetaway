@@ -11,9 +11,9 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-func runMigrations(databaseURL string) {
+func runMigrations(migrationsPath, databaseURL string) {
 	m, err := migrate.New(
-		"file:///app/db/migrations",
+		migrationsPath,
 		databaseURL,
 	)
 	if err != nil {
@@ -26,11 +26,20 @@ func runMigrations(databaseURL string) {
 }
 
 func main() {
-	dbURL := os.Getenv("DATABASE_URL")
-	log.Printf("DATABASE_URL: %s", dbURL)
-	runMigrations(os.Getenv("DATABASE_URL"))
-	r := gin.Default()
+	loadEnvFile("../.env")
 
+	dbURL := os.Getenv("DATABASE_URL")
+	migrationsPath := os.Getenv("MIGRATIONS_PATH")
+
+	if migrationsPath == "" {
+		migrationsPath = "file:///app/db/migrations" // Default container path.
+	}
+
+	log.Printf("DATABASE_URL: %s", dbURL)
+	log.Printf("MIGRATIONS_PATH: %s", migrationsPath)
+	runMigrations(migrationsPath, dbURL)
+
+	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})

@@ -11,7 +11,6 @@ A full-stack, containerized trip planning app built with React, Go, and Postgres
 - Responsive, modern UI (Material UI)
 - RESTful API backend in Go
 - Persistent storage with PostgreSQL
-- Easy local development with Podman
 - **Automated database migrations** with golang-migrate
 
 ---
@@ -25,6 +24,48 @@ A full-stack, containerized trip planning app built with React, Go, and Postgres
 
 ---
 
+## Local Development Workflow
+
+For day-to-day development, use your host machine for speed and convenience:
+
+- **Frontend:**  
+  Run locally with hot reload:
+
+  ```sh
+  cd frontend
+  npm install
+  npm run dev
+  ```
+
+  This is fastest for UI development and debugging.
+
+- **Backend:**  
+  Run locally for rapid iteration:
+
+  ```sh
+  cd backend
+  go run .
+  ```
+
+  This lets you quickly test code changes.
+
+- **Database:**  
+  It is recommended to use the Podman-managed Postgres container for both local development and integration testing.  
+  This keeps your environment consistent and avoids local Postgres setup headaches.
+
+Use **Podman containers** when you want to:
+
+- Test integration between services
+- Simulate production environments
+- Verify container orchestration and environment variable handling
+
+**Summary:**
+
+- Use host machine for active frontend/backend development.
+- Use Podman for database, integration/full stack testing, and deployment.
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -32,7 +73,7 @@ A full-stack, containerized trip planning app built with React, Go, and Postgres
 - [Podman](https://podman.io/getting-started/installation)
 - (Optional for development) Node.js v20+ and Go 1.24+
 
-### Quick Start
+### Quick Start (Full Stack in Containers)
 
 ```sh
 git clone https://github.com/msmith1392/travelgetaway.git
@@ -53,9 +94,9 @@ podman volume create travelgetaway_pgdata
 
 ---
 
-### Development (without Podman)
+### Development (Host Machine)
 
-You can also run each service directly for local development:
+You can also run frontend and backend directly for fast local development:
 
 #### Frontend
 
@@ -70,12 +111,14 @@ npm run dev
 ```sh
 cd backend
 go mod tidy
-go run main.go
+go run .
 ```
 
 #### Database
 
-- Install Postgres locally or use Podman
+- It is recommended to use the Podman-managed Postgres container for local development.
+  This ensures consistency across environments, keeps your system clean, and makes setup and teardown easy.
+  Your database setup (version, schema, configuration) will match production and CI
 - **Migrations are automated**—no need to run migration scripts by hand.
 - To seed demo data, run:
   ```sh
